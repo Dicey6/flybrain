@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#060a0d">
+<title>BIO1 / BIO2 — Embodiment Observatory</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="canvas-wrap" aria-label="Three-dimensional BIO1 and BIO2 observation environment"></div>
+
+<div id="landing">
+  <div id="landing-inner">
+    <div class="eyebrow"><span class="signal-dot"></span> FLYEM-DERIVED CIRCUIT EMBODIMENT <span class="eyebrow-rule"></span> OBSERVATORY 01</div>
+    <h1>BIO1 <span>/</span> BIO2</h1>
+    <h2>Two embodied nervous systems. One shared environment.</h2>
+    <p>
+      This runtime instantiates two independent agents from the same class of sensory-relay,
+      lateral-inhibition, chemotactic, and escape-reflex motifs described in the male
+      <em>Drosophila</em> central nervous system connectome. Each circuit is embodied in a
+      six-legged, wing-bearing chassis and released into the same observation arena.
+    </p>
+    <p>
+      Neither agent is scripted. Foraging, avoidance, investigation, and resource contest emerge
+      from independent initial conditions and stochastic spontaneous firing. The display is an
+      observation instrument, not a game: there is no objective, score, or player-controlled agent.
+    </p>
+    <div class="landing-meta">
+      <span>166,700 NEURONS</span><span>·</span><span>125M SYNAPSES</span><span>·</span>
+      <span>MALE CNS v1.0</span><span>·</span><span>PROCEDURAL EMBODIMENT</span>
+    </div>
+    <button id="btn-enter">Enter observatory <span>↗</span></button>
+    <div class="hint">Drag to orbit · scroll or pinch to zoom · select a specimen to follow</div>
+  </div>
+</div>
+
+<header id="topbar" class="hidden-until-enter">
+  <div class="brand-lockup">
+    <div class="brand-mark">B<span>/</span>B</div>
+    <div>
+      <div class="brand">BIO1 / BIO2</div>
+      <div class="brand-sub">embodiment observatory · live</div>
+    </div>
+  </div>
+  <div class="follow-toggle" aria-label="Select specimen to follow">
+    <button id="btn-follow-1" class="follow-btn active" data-bio="1">BIO1 <small>amber</small></button>
+    <button id="btn-follow-2" class="follow-btn" data-bio="2">BIO2 <small>cyan</small></button>
+  </div>
+  <div class="panel-toggles">
+    <button id="btn-toggle-scan" class="ghost-btn active"><i class="toggle-led"></i> scan</button>
+    <button id="btn-toggle-term" class="ghost-btn active"><i class="toggle-led"></i> process</button>
+    <button id="btn-toggle-info" class="ghost-btn">about</button>
+  </div>
+</header>
+
+<aside id="specimen-panel" class="panel specimen-panel hidden-until-enter">
+  <div class="panel-head"><span>FOLLOWING SPECIMEN</span><span class="panel-index">01 / 02</span></div>
+  <div class="specimen-name"><span id="specimen-swatch" class="specimen-swatch"></span><span id="specimen-label">BIO1</span></div>
+  <div class="specimen-mode"><span class="status-pulse"></span><span id="specimen-mode">baseline spontaneous firing</span></div>
+  <div class="telemetry-row"><span>HUNGER</span><strong id="telemetry-hunger">0.35</strong></div>
+  <div class="telemetry-row"><span>VALENCE</span><strong id="telemetry-valence">+0.00</strong></div>
+  <div class="telemetry-row"><span>ESCAPES</span><strong id="telemetry-escapes">0</strong></div>
+</aside>
+
+<section id="scan-panel" class="panel hidden-until-enter">
+  <div class="panel-head">
+    <span>CONNECTOME SCAN <small>PROCEDURAL RECONSTRUCTION</small></span>
+    <button class="close-btn" data-close="scan-panel" aria-label="Close scan panel">×</button>
+  </div>
+  <div class="scan-legend"><span><i class="legend-dot excitatory"></i> excitatory</span><span><i class="legend-dot inhibitory"></i> inhibitory</span><span class="scan-readout">LIVE / 04.2 Hz</span></div>
+  <canvas id="scan-canvas"></canvas>
+  <div class="panel-foot">generated neural volume · not raw EM data</div>
+</section>
+
+<section id="term-panel" class="panel hidden-until-enter">
+  <div class="panel-head">
+    <span>PROCESS LOG <small>EVENT STREAM</small></span>
+    <button class="close-btn" data-close="term-panel" aria-label="Close process log">×</button>
+  </div>
+  <div id="term-body"></div>
+</section>
+
+<section id="info-panel" class="panel hidden">
+  <div class="panel-head">
+    <span>ABOUT THIS RUNTIME</span>
+    <button class="close-btn" data-close="info-panel" aria-label="Close about panel">×</button>
+  </div>
+  <div class="panel-foot info-copy">
+    <p><b>OBSERVATION INSTRUMENT</b></p>
+    <p>The circuit architecture is inspired by the published male <em>Drosophila</em> CNS connectome: sensory relay, center-surround lateral inhibition, chemotaxis-style foraging, and giant-fiber-style escape.</p>
+    <p>This visualization is a hand-authored procedural reconstruction, not a replay of raw EM/connectome scan data. Nothing here trades, scores, or wins.</p>
+  </div>
+</section>
+
+<div id="scene-readout" class="hidden-until-enter">
+  <div><span class="readout-label">FIELD</span><span>OBSERVATION ARENA / A-01</span></div>
+  <div><span class="readout-label">RUNTIME</span><span id="runtime-time">00:00:00</span></div>
+</div>
+
+<div id="controls" class="hidden-until-enter">
+  <button id="btn-obstacle"><span>+</span> obstacle</button>
+  <button id="btn-food"><span>+</span> resource</button>
+  <button id="btn-reset">reset field</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="js/brain.js"></script>
+<script src="js/scan.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
