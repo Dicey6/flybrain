@@ -17,17 +17,24 @@ body.entered .hidden-until-enter{display:flex}body.entered #landing{display:none
 #landing{position:absolute;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;
   background:radial-gradient(ellipse at 50% 26%,#11201f 0%,#081013 42%,#05080a 80%);padding:28px}
 #landing:before{content:"";position:absolute;inset:24px;border:1px solid rgba(156,190,181,.1);pointer-events:none}
-#landing-inner{position:relative;max-width:690px;padding:18px 0}
+#landing-inner{position:relative;max-width:720px;padding:18px 0}
 .eyebrow{display:flex;align-items:center;gap:10px;font:10px/1 var(--mono);letter-spacing:.14em;color:var(--amber);margin-bottom:20px}
 .signal-dot,.status-pulse{width:6px;height:6px;border-radius:50%;background:var(--exc);box-shadow:0 0 12px var(--exc);display:inline-block}
 .eyebrow-rule{width:44px;height:1px;background:var(--line);display:inline-block}
 #landing-inner h1{font-size:clamp(48px,8vw,86px);line-height:.9;margin:0 0 14px;font-weight:700;letter-spacing:-.065em}
 #landing-inner h1 span{font-weight:300;color:var(--muted)}
-#landing-inner h2{font-size:17px;line-height:1.4;font-weight:400;color:#a9bbb5;margin:0 0 28px;max-width:520px}
+#landing-inner h2{font-size:17px;line-height:1.4;font-weight:400;color:#a9bbb5;margin:0 0 22px;max-width:560px}
 #landing-inner p{font-size:13px;line-height:1.72;color:#b8c6c0;margin:0 0 14px;max-width:640px}
 #landing-inner em{color:var(--ink)}#landing-inner strong{color:var(--amber)}
-.landing-meta{font:10px/1.6 var(--mono);letter-spacing:.05em;color:var(--dim);margin:26px 0 24px;display:flex;gap:9px;flex-wrap:wrap}
-#btn-enter{background:var(--amber);color:#08100e;border:0;padding:13px 19px;font-size:13px;font-weight:700;cursor:pointer;transition:transform .2s,background .2s}
+.landing-meta{font:10px/1.6 var(--mono);letter-spacing:.05em;color:var(--dim);margin:22px 0 16px;display:flex;gap:9px;flex-wrap:wrap}
+.boot-status{display:grid;gap:5px;border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);padding:10px 0;margin:0 0 15px;max-width:570px}
+.boot-step{display:grid;grid-template-columns:9px 1fr auto;align-items:center;gap:8px;font:9px/1.35 var(--mono);color:var(--muted);letter-spacing:.03em;text-transform:uppercase}
+.boot-step i{width:5px;height:5px;border-radius:50%;background:var(--muted);display:block}
+.boot-step small{font-size:8px;color:var(--muted)}
+.boot-step.active{color:var(--ink)}.boot-step.active i{background:var(--amber);box-shadow:0 0 9px var(--amber)}.boot-step.active small{color:var(--amber)}
+.boot-step.done{color:var(--dim)}.boot-step.done i{background:var(--exc);box-shadow:0 0 8px var(--exc)}.boot-step.done small{color:var(--exc)}
+#btn-enter{background:var(--amber);color:#08100e;border:0;padding:13px 19px;font-size:13px;font-weight:700;cursor:pointer;transition:transform .2s,background .2s,opacity .2s}
+#btn-enter:disabled{cursor:wait;opacity:.55;background:#80633a}
 #btn-enter span{font-size:16px;margin-left:8px}#btn-enter:hover{background:#ffd083;transform:translateY(-1px)}
 .hint{font:10px/1.4 var(--mono);color:var(--dim);margin-top:13px}
 
@@ -53,4 +60,4 @@ body.entered .hidden-until-enter{display:flex}body.entered #landing{display:none
 
 #scene-readout{position:absolute;z-index:10;right:16px;bottom:68px;flex-direction:column;gap:6px;color:var(--dim);font:9px var(--mono);text-align:right;letter-spacing:.05em}.scene-readout div{display:flex;gap:8px;justify-content:flex-end}.readout-label{color:var(--muted)}
 #controls{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:20;gap:5px;padding:5px;background:rgba(6,10,12,.79);border:1px solid var(--line);backdrop-filter:blur(12px)}#controls button{background:transparent;border:1px solid transparent;color:#a9bbb5;font:10px var(--mono);padding:8px 11px;cursor:pointer}#controls button:hover{border-color:var(--amber);color:var(--amber)}#controls button span{font-size:14px;vertical-align:-1px;margin-right:3px}
-@media(max-width:720px){#landing{padding:21px}#landing:before{inset:12px}.eyebrow{font-size:8px;letter-spacing:.08em}.eyebrow-rule{width:20px}#landing-inner h1{font-size:51px}#landing-inner h2{font-size:14px;margin-bottom:20px}#landing-inner p{font-size:12px;line-height:1.58}.landing-meta{font-size:8px;margin:19px 0}.brand-lockup{min-width:auto}.brand-sub{display:none}.brand{font-size:10px}.brand-mark{width:23px;height:23px}.follow-btn{padding:6px 7px;font-size:9px}.follow-btn small{display:none}.panel-toggles{gap:3px}.ghost-btn{font-size:0;padding:7px}.ghost-btn .toggle-led{margin:0}.ghost-btn:last-child{font-size:9px}.specimen-panel{top:63px;left:8px;width:176px}.specimen-name{font-size:17px}.telemetry-row{font-size:8px}#scan-panel{top:63px;right:8px;width:174px;height:194px}#scan-canvas{height:136px}.scan-legend{font-size:7px;gap:5px}.scan-legend span:nth-child(2){display:none}#term-panel{left:8px;bottom:58px;width:224px;height:182px}#scene-readout{right:8px;bottom:58px;font-size:8px}#controls{bottom:9px}.panel-head{font-size:8px}}
+@media(max-width:720px){#landing{padding:21px}#landing:before{inset:12px}.eyebrow{font-size:8px;letter-spacing:.08em}.eyebrow-rule{width:20px}#landing-inner h1{font-size:51px}#landing-inner h2{font-size:14px;margin-bottom:16px}#landing-inner p{font-size:12px;line-height:1.58}.landing-meta{font-size:8px;margin:16px 0 12px}.boot-status{gap:4px;padding:8px 0}.boot-step{font-size:8px}.boot-step small{font-size:7px}.brand-lockup{min-width:auto}.brand-sub{display:none}.brand{font-size:10px}.brand-mark{width:23px;height:23px}.follow-btn{padding:6px 7px;font-size:9px}.follow-btn small{display:none}.panel-toggles{gap:3px}.ghost-btn{font-size:0;padding:7px}.ghost-btn .toggle-led{margin:0}.ghost-btn:last-child{font-size:9px}.specimen-panel{top:63px;left:8px;width:176px}.specimen-name{font-size:17px}.telemetry-row{font-size:8px}#scan-panel{top:63px;right:8px;width:174px;height:194px}#scan-canvas{height:136px}.scan-legend{font-size:7px;gap:5px}.scan-legend span:nth-child(2){display:none}#term-panel{left:8px;bottom:58px;width:224px;height:182px}#scene-readout{right:8px;bottom:58px;font-size:8px}#controls{bottom:9px}.panel-head{font-size:8px}}

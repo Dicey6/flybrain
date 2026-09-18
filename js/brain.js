@@ -48,6 +48,9 @@
       this.otherFoodDrive = 0;
       this.orbitBias = this.rand() > 0.5 ? 1 : -1;
       this._escapeWindup = 0;
+      this._pauseTimer = 0;
+      this._pauseCooldown = 2.5 + this.rand() * 3.5;
+      this._pauseTurn = 0;
       this._noisePhase = this.rand() * 100;
       this._t = 0;
     }
@@ -56,6 +59,13 @@
 
     step(dt) {
       this._t += dt;
+      this._pauseTimer = Math.max(0, this._pauseTimer - dt);
+      this._pauseCooldown -= dt;
+      if (this._pauseTimer <= 0 && this._pauseCooldown <= 0 && this.rand() < dt * 0.28) {
+        this._pauseTimer = 0.45 + this.rand() * 1.15;
+        this._pauseCooldown = 3.5 + this.rand() * 6;
+        this._pauseTurn = (this.rand() * 2 - 1) * 1.8;
+      }
       for (let i = 0; i < N_SENS; i++) {
         this.obstacleRelay[i] = Math.tanh(this.obstacleSensors[i] * 1.6 + this.obstacleRelay[i] * 0.35);
       }
@@ -102,7 +112,8 @@
 
       const inContest = this.otherDistNorm < 0.55 && this.socialValence > 0.35 && this.foodDrive > 0.2;
       let candidate;
-      if (this.frontDanger > 0.3) candidate = 'avoid-obstacle';
+      if (this._pauseTimer > 0) candidate = 'pause';
+      else if (this.frontDanger > 0.3) candidate = 'avoid-obstacle';
       else if (inContest) candidate = 'contest-resource';
       else if (this.otherDistNorm < 0.55 && this.socialValence > 0.12) candidate = 'investigate';
       else if (this.otherDistNorm < 0.55 && this.socialValence < -0.12) candidate = 'avoid-agent';
@@ -110,7 +121,7 @@
       else candidate = 'wander';
 
       this.modeTimer += dt;
-      if (candidate !== this.lastMode && this.modeTimer >= 0.35) {
+      if (candidate !== this.lastMode && (candidate === 'pause' || this.modeTimer >= 0.35)) {
         this.lastMode = candidate;
         this.modeTimer = 0;
       }
@@ -130,6 +141,10 @@
         targetSpeed = Math.min(1.3, targetSpeed + 0.25 * this.socialValence);
       }
       if (this.foodDrive > 0.25) targetSpeed = Math.min(1.35, targetSpeed + this.foodDrive * 0.4);
+      if (this.mode === 'pause') {
+        targetTurn = this._pauseTurn;
+        targetSpeed = 0;
+      }
 
       this.justEscaped = false;
       const dangerTriggered = this.frontDanger > 0.62;

@@ -7,8 +7,8 @@
   const SENS_RANGE = 5.5;
   const SENS_CONE = Math.PI / 4.2;
   const ARENA_R = 22;
-  const BASE_SPEED = 1.7;
-  const GAIT_FREQ = 7;
+  const BASE_SPEED = 0.78;
+  const GAIT_FREQ = 4.5;
 
   const wrap = document.getElementById('canvas-wrap');
   const scene = new THREE.Scene();
@@ -247,14 +247,19 @@
     return out;
   }
 
-  function setLegSpan(leg, hip, foot) {
-    const midpoint = new THREE.Vector3().addVectors(hip, foot).multiplyScalar(.5);
-    const direction = new THREE.Vector3().subVectors(foot, hip);
+  function setLegSegment(mesh, start, end) {
+    const midpoint = new THREE.Vector3().addVectors(start, end).multiplyScalar(.5);
+    const direction = new THREE.Vector3().subVectors(end, start);
     const length = Math.max(direction.length(), .05);
-    leg.upper.position.copy(midpoint); leg.upper.scale.set(1, length, 1);
-    leg.upper.setRotationFromQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction.clone().normalize()));
-    leg.lower.position.copy(foot); leg.lower.scale.set(1, .42, 1);
-    leg.lower.setRotationFromQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 1, .2).normalize()));
+    mesh.position.copy(midpoint);
+    mesh.scale.set(1, length, 1);
+    mesh.setRotationFromQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction.normalize()));
+  }
+  function setLegSpan(leg, hip, foot) {
+    const knee = new THREE.Vector3().lerpVectors(hip, foot, .5);
+    knee.y += .045;
+    setLegSegment(leg.upper, hip, knee);
+    setLegSegment(leg.lower, knee, foot);
   }
   function stepAgentMovement(agent, dt, elapsed) {
     const group = agent.vis.group, brain = agent.brain;
@@ -270,9 +275,9 @@
       const phase = agent.gaitPhase + (leg.group === 'A' ? 0 : Math.PI);
       const lift = Math.max(0, Math.sin(phase)) * .16;
       const stride = Math.cos(phase) * .18;
-      agent.hipWorld.set(leg.def.x, .27, leg.def.z); agent.hipWorld.applyMatrix4(group.matrixWorld);
+      agent.hipWorld.set(leg.def.x, .27, leg.def.z);
       agent.footBase.set(leg.def.x * 1.7, .02 + lift, leg.def.z + stride * .6);
-      agent.footWorld.copy(agent.footBase); agent.footWorld.applyMatrix4(group.matrixWorld);
+      agent.footWorld.copy(agent.footBase);
       setLegSpan(leg, agent.hipWorld, agent.footWorld);
     }
     const flap = Math.sin(elapsed * 12 + (agent.id === 'BIO1' ? 0 : 1.7)) * .22 + .28;
@@ -322,7 +327,8 @@
     escape: ['giant-fiber-style escape triggered — jump reflex fired', 'high-gain startle burst on descending pathway'],
     investigate: ['conspecific detected — approach vector engaged', 'social relay bias positive, orienting toward BIO'],
     'avoid-agent': ['conspecific detected — withdrawal vector engaged', 'social relay bias negative, disengaging'],
-    'contest-resource': ['overlapping resource claim detected', 'competitive approach — resource contest state']
+    'contest-resource': ['overlapping resource claim detected', 'competitive approach — resource contest state'],
+    pause: ['locomotor pause — spontaneous state sampled', 'heading reset — circuit activity temporarily quiet']
   };
   function clockStamp() { return new Date().toISOString().substr(11, 8); }
   function pushLog(agentId, mode, extra) {
@@ -338,7 +344,7 @@
   const specimenLabel = document.getElementById('specimen-label');
   const specimenMode = document.getElementById('specimen-mode');
   const specimenSwatch = document.getElementById('specimen-swatch');
-  const modeCopy = { wander: 'baseline spontaneous firing', forage: 'chemotactic relay engaged', 'avoid-obstacle': 'lateral inhibition resolving', escape: 'escape pathway active', investigate: 'conspecific investigation', 'avoid-agent': 'social withdrawal', 'contest-resource': 'resource contest' };
+  const modeCopy = { wander: 'baseline spontaneous firing', forage: 'chemotactic relay engaged', 'avoid-obstacle': 'lateral inhibition resolving', escape: 'escape pathway active', investigate: 'conspecific investigation', 'avoid-agent': 'social withdrawal', 'contest-resource': 'resource contest', pause: 'locomotor pause / reorientation' };
   function updateTelemetry(agent) {
     const brain = agent.brain;
     specimenLabel.textContent = agent.id;
@@ -351,7 +357,39 @@
   }
   const scanRenderer = initScanRenderer(document.getElementById('scan-canvas'));
   window.addEventListener('resize', () => scanRenderer.resize());
-  document.getElementById('btn-enter').addEventListener('click', () => { document.body.classList.add('entered'); scanRenderer.resize(); sysLog('observatory initialized — two independent circuit instances online'); });
+  const enterButton = document.getElementById('btn-enter');
+  const bootSteps = Array.from(document.querySelectorAll('.boot-step'));
+  const bootSequence = [
+    { key: 'server', delay: 550 },
+    { key: 'astra', delay: 1100 },
+    { key: 'relay', delay: 1650 },
+    { key: 'specimens', delay: 2200 }
+  ];
+  bootSequence.forEach((step, index) => {
+    window.setTimeout(() => {
+      const current = document.querySelector('[data-boot-step="' + step.key + '"]');
+      if (current) {
+        current.classList.remove('active');
+        current.classList.add('done');
+        current.querySelector('small').textContent = 'online';
+      }
+      const next = bootSteps[index + 1];
+      if (next) {
+        next.classList.add('active');
+        next.querySelector('small').textContent = 'connecting';
+      } else {
+        enterButton.disabled = false;
+        enterButton.textContent = 'Enter observatory ↗';
+        enterButton.classList.add('ready');
+      }
+    }, step.delay);
+  });
+  enterButton.addEventListener('click', () => {
+    simulationStarted = true;
+    document.body.classList.add('entered');
+    scanRenderer.resize();
+    sysLog('observatory initialized — two independent circuit instances online');
+  });
   function setFollow(num, button) { followId = 'BIO' + num; document.querySelectorAll('.follow-btn').forEach((item) => item.classList.remove('active')); button.classList.add('active'); }
   document.getElementById('btn-follow-1').addEventListener('click', (event) => setFollow('1', event.currentTarget));
   document.getElementById('btn-follow-2').addEventListener('click', (event) => setFollow('2', event.currentTarget));
@@ -379,29 +417,32 @@
 
   // ---------------- main observation loop ----------------
   const clock = new THREE.Clock();
-  let logTimer = 0, runtime = 0;
+  let logTimer = 0, runtime = 0, simulationStarted = false;
   function animate() {
     requestAnimationFrame(animate);
-    const dt = Math.min(clock.getDelta(), .05); runtime += dt;
-    for (const agent of agents) agent.brain.otherFoodDrive = otherOf(agent).brain.foodDrive;
-    for (const agent of agents) {
-      const position = agent.vis.group.position, heading = agent.vis.group.rotation.y, other = otherOf(agent);
-      const obstacleSignals = computeConeSensors(position, heading, obstacles);
-      const boundarySignals = boundarySensor(position, heading);
-      for (let i = 0; i < N_SENS; i++) agent.brain.obstacleSensors[i] = Math.max(obstacleSignals[i], boundarySignals[i]);
-      agent.brain.foodSensors.set(computeConeSensors(position, heading, food.filter((item) => item.alive)));
-      agent.brain.otherSensors.set(computeConeSensors(position, heading, [{ x: other.vis.group.position.x, z: other.vis.group.position.z, r: .4 }]));
-      const telemetry = agent.brain.step(dt);
-      stepAgentMovement(agent, dt, runtime); checkFoodConsumption(agent);
-      logTimer -= dt;
-      if (telemetry.escape || (logTimer <= 0 && rand() < .5)) pushLog(agent.id, telemetry.mode, '[hunger ' + telemetry.hunger.toFixed(2) + ' valence ' + telemetry.socialValence.toFixed(2) + ']');
+    const dt = Math.min(clock.getDelta(), .05);
+    if (simulationStarted) {
+      runtime += dt;
+      for (const agent of agents) agent.brain.otherFoodDrive = otherOf(agent).brain.foodDrive;
+      for (const agent of agents) {
+        const position = agent.vis.group.position, heading = agent.vis.group.rotation.y, other = otherOf(agent);
+        const obstacleSignals = computeConeSensors(position, heading, obstacles);
+        const boundarySignals = boundarySensor(position, heading);
+        for (let i = 0; i < N_SENS; i++) agent.brain.obstacleSensors[i] = Math.max(obstacleSignals[i], boundarySignals[i]);
+        agent.brain.foodSensors.set(computeConeSensors(position, heading, food.filter((item) => item.alive)));
+        agent.brain.otherSensors.set(computeConeSensors(position, heading, [{ x: other.vis.group.position.x, z: other.vis.group.position.z, r: .4 }]));
+        const telemetry = agent.brain.step(dt);
+        stepAgentMovement(agent, dt, runtime); checkFoodConsumption(agent);
+        logTimer -= dt;
+        if (telemetry.escape || (logTimer <= 0 && rand() < .5)) pushLog(agent.id, telemetry.mode, '[hunger ' + telemetry.hunger.toFixed(2) + ' valence ' + telemetry.socialValence.toFixed(2) + ']');
+      }
+      if (logTimer <= 0) logTimer = 1.4 + rand() * 1.6;
+      food.forEach((item) => { if (item.alive) { item.mesh.rotation.y += dt * .8; item.mesh.position.y = .23 + Math.sin(runtime * 1.6 + item.phase) * .035; } });
+      field.rotation.y = Math.sin(runtime * .025) * .002;
+      fieldLight.intensity = .72 + Math.sin(runtime * .7) * .08;
     }
-    if (logTimer <= 0) logTimer = 1.4 + rand() * 1.6;
-    food.forEach((item) => { if (item.alive) { item.mesh.rotation.y += dt * .8; item.mesh.position.y = .23 + Math.sin(runtime * 1.6 + item.phase) * .035; } });
-    field.rotation.y = Math.sin(runtime * .025) * .002;
-    fieldLight.intensity = .72 + Math.sin(runtime * .7) * .08;
     updateCamera(); updateTelemetry(followedAgent()); scanRenderer.update(dt); renderer.render(scene, camera);
-    document.getElementById('runtime-time').textContent = new Date(runtime * 1000).toISOString().substr(11, 8);
+    if (simulationStarted) document.getElementById('runtime-time').textContent = new Date(runtime * 1000).toISOString().substr(11, 8);
   }
   animate();
 })();

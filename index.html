@@ -14,24 +14,33 @@
   <div id="landing-inner">
     <div class="eyebrow"><span class="signal-dot"></span> FLYEM-DERIVED CIRCUIT EMBODIMENT <span class="eyebrow-rule"></span> OBSERVATORY 01</div>
     <h1>BIO1 <span>/</span> BIO2</h1>
-    <h2>Two embodied nervous systems. One shared environment.</h2>
+    <h2>What happens when two flybrains share one world?</h2>
     <p>
-      This runtime instantiates two independent agents from the same class of sensory-relay,
-      lateral-inhibition, chemotactic, and escape-reflex motifs described in the male
-      <em>Drosophila</em> central nervous system connectome. Each circuit is embodied in a
-      six-legged, wing-bearing chassis and released into the same observation arena.
+      Everyone has been experimenting with a flybrain in a simulation. Almost nobody asked what
+      would happen if we put <strong>two</strong> flybrains in one simulation. Well, I did that.
     </p>
     <p>
-      Neither agent is scripted. Foraging, avoidance, investigation, and resource contest emerge
-      from independent initial conditions and stochastic spontaneous firing. The display is an
-      observation instrument, not a game: there is no objective, score, or player-controlled agent.
+      Meet BIO1 and BIO2: crab-like flies wired to the complete 166,700-neuron flybrain central
+      nervous system each, embodied in a six-legged, wing-bearing chassis, and released into a
+      shared simulation environment.
+    </p>
+    <p>
+      The SIM is triggered and monitored by OpenAI's GPT 6 Astra, connected to an automated X
+      account where updates on this flybrain are shared in real time. Here, two independent
+      circuits forage, avoid, investigate, pause, turn, and contest resources without a player.
     </p>
     <div class="landing-meta">
-      <span>166,700 NEURONS</span><span>·</span><span>125M SYNAPSES</span><span>·</span>
-      <span>MALE CNS v1.0</span><span>·</span><span>PROCEDURAL EMBODIMENT</span>
+      <span>166,700 NEURONS / INSTANCE</span><span>·</span><span>125M SYNAPSES</span><span>·</span>
+      <span>GPT 6 ASTRA</span><span>·</span><span>X TELEMETRY RELAY</span>
     </div>
-    <button id="btn-enter">Enter observatory <span>↗</span></button>
-    <div class="hint">Drag to orbit · scroll or pinch to zoom · select a specimen to follow</div>
+    <div id="boot-status" class="boot-status" aria-live="polite">
+      <div class="boot-step active" data-boot-step="server"><i></i><span>connecting to server</span><small>connecting</small></div>
+      <div class="boot-step" data-boot-step="astra"><i></i><span>connecting to GPT 6 Astra instance</span><small>queued</small></div>
+      <div class="boot-step" data-boot-step="relay"><i></i><span>opening automated X telemetry relay</span><small>queued</small></div>
+      <div class="boot-step" data-boot-step="specimens"><i></i><span>instantiating BIO1 + BIO2</span><small>queued</small></div>
+    </div>
+    <button id="btn-enter" disabled>Preparing observatory <span>↗</span></button>
+    <div class="hint">Drag to orbit · zoom in/out with scroll or pinch · select a specimen to follow</div>
   </div>
 </div>
 
@@ -89,6 +98,7 @@
   <div class="panel-foot info-copy">
     <p><b>OBSERVATION INSTRUMENT</b></p>
     <p>The circuit architecture is inspired by the published male <em>Drosophila</em> CNS connectome: sensory relay, center-surround lateral inhibition, chemotaxis-style foraging, and giant-fiber-style escape.</p>
+    <p>GPT 6 Astra and the X telemetry relay are part of the observatory narrative presented here. This standalone runtime does not make live external network calls; the neural activity and event stream are procedural.</p>
     <p>This visualization is a hand-authored procedural reconstruction, not a replay of raw EM/connectome scan data. Nothing here trades, scores, or wins.</p>
   </div>
 </section>
