@@ -27,6 +27,7 @@ body.entered .hidden-until-enter{display:flex}body.entered #landing{display:none
 #landing-inner p{font-size:13px;line-height:1.72;color:#b8c6c0;margin:0 0 14px;max-width:640px}
 #landing-inner em{color:var(--ink)}#landing-inner strong{color:var(--amber)}
 .landing-meta{font:10px/1.6 var(--mono);letter-spacing:.05em;color:var(--dim);margin:22px 0 16px;display:flex;gap:9px;flex-wrap:wrap}
+.contract-line{display:flex;align-items:baseline;gap:9px;font:9px/1.5 var(--mono);color:var(--dim);margin:-5px 0 15px;letter-spacing:.04em;word-break:break-all}.contract-line span{color:var(--amber);font-weight:700;letter-spacing:.08em}.contract-line code{font:inherit;color:#a9bbb5}
 .boot-status{display:grid;gap:5px;border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);padding:10px 0;margin:0 0 15px;max-width:570px}
 .boot-step{display:grid;grid-template-columns:9px 1fr auto;align-items:center;gap:8px;font:9px/1.35 var(--mono);color:var(--muted);letter-spacing:.03em;text-transform:uppercase}
 .boot-step i{width:5px;height:5px;border-radius:50%;background:var(--muted);display:block}
